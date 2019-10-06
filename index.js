@@ -35,14 +35,14 @@ io.on("connection", socket => {
         console.log(nicknames);
 
         console.log("Se esta moviendo el usuario",data.currentNick);
-        if(data.currentNick===undefined)        
+        if(data.currentNick===undefined)
             io.sockets.emit("draw", nicknames);
         else{
             io.sockets.emit('change',nicknames);
         }
     });
     socket.on('update',function(data){
-        console.log('usuario: ',data);
+        console.log('usuario: ',data.currentNick);
     })
     socket.on("disconnect", function () {
         console.log("user disconnected:" + socket.nickname);

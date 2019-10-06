@@ -16,7 +16,7 @@ map.locate({
     setView: true,
     maxZoom: 16,
     enableHighAccuracy: true,
-    // watch: true
+    watch: true
 });
 
 //Esta es una funcion predeterminada que trae leafLetjs que
@@ -111,7 +111,9 @@ socket.on("draw", data => {
         }
     }
 });
-socket.on('change')
+socket.on('change',data =>{
+  console.log("Supuestamente actualizando la posicion de ",data);  
+});
 socket.on("disconnect", data => {
     console.log(data);
     users[data].remove();
