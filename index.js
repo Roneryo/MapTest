@@ -17,7 +17,6 @@ const SocketIO = require("socket.io")(http);
 const io = SocketIO.listen(server);
 
 io.on("connection", socket => {
-    cleanup();
     console.log("new connection", socket.id);
     socket.on("locationfound", (data, callback) => {
         if (nicknames.hasOwnProperty(data)) {
@@ -64,4 +63,6 @@ io.on("connection", socket => {
         nicknames[socket.nickname].online = false; //We dont splie nickname from array but change online state to false
         io.sockets.emit("disconnect", socket.nickname);
     });
+    cleanup();
+
 });
