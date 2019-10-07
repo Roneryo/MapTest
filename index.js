@@ -23,6 +23,7 @@ io.on("connection", socket => {
             callback(false);
         } else {
             callback(true);
+            if(data.currentNick===undefined){
             socket.nickname = cont;
             cont++; //Incremento en 1 a 1 cada usuario y los elimino en el frontend
             nicknames[socket.nickname] = {
@@ -31,19 +32,31 @@ io.on("connection", socket => {
                 radius: data.radius
             }; //Then we put an object with a variable online
             console.log("user connected: " + socket.nickname);
+            }
         }
         console.log(nicknames);
 
         console.log("Se esta moviendo el usuario",data.currentNick);
-        if(data.currentNick===undefined)
+        if(data.currentNick===undefined){
             io.sockets.emit("draw", nicknames);
+        }
         else{
-            io.sockets.emit('change',nicknames);
+            io.sockets.emit('change',{
+                user  :data.currentNick,
+                cords :{lat:data.lat,lng:data.lng},
+                radius:data.radius
+            });
         }
     });
     socket.on('update',function(data){
-        console.log('usuario: ',data.currentNick);
-    })
+        // console.log("change me dio esto: ",data);
+        console.log('usuario: ',data.user);
+        nicknames[data.user].coords[0] = data.cords.lat;
+        nicknames[data.user].coords[1] = data.cords.lng;
+        nicknames[data.user].radius    = data.radius;
+        // console.log('y le estoy dando esto: ',nicknames);
+        io.sockets.emit('update',nicknames);
+    });
     socket.on("disconnect", function () {
         console.log("user disconnected:" + socket.nickname);
         if (!socket.nickname) return;

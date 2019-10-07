@@ -113,7 +113,19 @@ socket.on("draw", data => {
 });
 socket.on('change',data =>{
   console.log("Supuestamente actualizando la posicion de ",data);  
+  users[data.user].setLatLng(data.cords);
+  areas[data.user].setLatLng(data.cords);
+  areas[data.user].setRadius(data.radius);
+  socket.emit('update',data);
 });
+socket.on('update',data=>{
+    console.log(data);
+    for (d in data) {
+        console.log(data[d].coords);
+        users[d].setLatLng({lat:data[d].coords[0],lng:data[d].coords[1]});
+        areas[d].setLatLng({lat:data[d].coords[0],lng:data[d].coords[1]});
+    }
+})
 socket.on("disconnect", data => {
     console.log(data);
     users[data].remove();
